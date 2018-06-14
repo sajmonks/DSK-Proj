@@ -7,7 +7,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
-import wat.tomasz.dsk.Packet;
+import wat.tomasz.dsk.Packets.Packet;
 
 public abstract class Socket {
 	
@@ -28,7 +28,6 @@ public abstract class Socket {
 			e.printStackTrace();
 		}
 	}
-
 
 	public void closeSocket() {
 		
@@ -100,6 +99,13 @@ public abstract class Socket {
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public boolean isSocketActive() {
+		if(_socket != null)
+			return true;
+		
+		return false;
 	}
 	
 	private String dataToString(byte[] data, int length) {

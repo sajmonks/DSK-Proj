@@ -17,16 +17,22 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
+import wat.tomasz.dsk.Files.FileManager;
 import wat.tomasz.dsk.Utils.Utils;
 
 public class ConfigManager {
 	
-	enum MissingFiles { None, Keys, Surveys, Answers }
+	enum MissingFiles { None, Keys, Surveys, Answers, Local }
 	
 	private PublicKey publicKey;
 	private PrivateKey privateKey;
+	
+	private int selfId = -1;
+	private int listenPort = 0;
 	
 	ConfigManager() {
 		
@@ -63,7 +69,7 @@ public class ConfigManager {
 		}
 		
 		privateKey = privKey;
-		publicKey = pubKey;
+		setPublicKey(pubKey);
 	}
 	
 	private boolean loadPublicKey() {
@@ -81,7 +87,7 @@ public class ConfigManager {
 		try {
 			X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(key);
 			KeyFactory keyFactory = KeyFactory.getInstance("DSA", "SUN");
-			publicKey = keyFactory.generatePublic(pubKeySpec);
+			setPublicKey(keyFactory.generatePublic(pubKeySpec));
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 			return false;
@@ -131,14 +137,33 @@ public class ConfigManager {
 		loadPrivateKey();
 	}
 	
-	public MissingFiles createMissingFiles() {
+	public void loadParameters() {
+		int[] parameters = FileManager.loadParameters();	
+		if(parameters != null) {
+			selfId = parameters[0];
+			listenPort = parameters[1];
+			System.out.println("Za³adowano id="+selfId + ", nasluchiwany port=" + listenPort);
+		}
+	}
+	
+	public List<MissingFiles> createMissingFiles() {
+		
+		List<MissingFiles> missing = new ArrayList<MissingFiles>();
 		if( !(new File("private.key").exists()) || !(new File("public.key").exists()) ) {
 			System.out.println("Brak pary kluczy. Generowanie nowych, usuniêcie z sieci.");
 			generateKeys();
-			return MissingFiles.Keys;
+			missing.add(MissingFiles.Keys);
 		}
 		else {
 			loadKeys();
+		}
+		
+		if( !(new File("local.txt").exists()) ) {
+			System.out.println("Brak pliku local.txt");
+			missing.add(MissingFiles.Local);
+		} 
+		else {
+			loadParameters();
 		}
 		
 		if( !(new File("surveys.txt").exists()) ) {
@@ -148,8 +173,8 @@ public class ConfigManager {
 			} catch (IOException e) {
 				System.out.println("Nie uda³o zapisaæ siê pliku docelowego surveys.txt");
 			}
-			//TODO
-			return MissingFiles.Surveys;
+			
+			missing.add(MissingFiles.Surveys);
 		}
 		
 		if( !(new File("answers.txt").exists()) ) {
@@ -159,10 +184,25 @@ public class ConfigManager {
 			} catch (IOException e) {
 				System.out.println("Nie uda³o zapisaæ siê pliku docelowego answers.txt");
 			}
-			//TODO
-			return MissingFiles.Answers;
+			missing.add(MissingFiles.Answers);
 		}
-		return MissingFiles.None;
+		return missing;
+	}
+
+	public PublicKey getPublicKey() {
+		return publicKey;
+	}
+
+	public void setPublicKey(PublicKey publicKey) {
+		this.publicKey = publicKey;
+	}
+	
+	public int getListenPort() {
+		return listenPort;
+	}
+	
+	public int getSelfId() {
+		return selfId;
 	}
 	
 	

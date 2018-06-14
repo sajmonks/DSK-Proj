@@ -17,6 +17,9 @@ import java.util.Base64;
 public class Utils {
 	
 	public static boolean isValidAddress(String address) {
+		if(address == null || address == "" || address.length() < 8)
+			return false;
+		
 		try {
 			if (InetAddress.getByName(address) instanceof Inet6Address )
 				return false;			
@@ -27,6 +30,9 @@ public class Utils {
 	}
 	
 	public static boolean isValidPort(String port) {
+		if(port == null || port == "")
+			return false;
+		
 		try {
 			int intPort = Integer.parseInt(port);
 			if(intPort <= 0 || intPort >= 65534)
