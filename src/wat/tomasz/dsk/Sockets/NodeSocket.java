@@ -1,6 +1,7 @@
 package wat.tomasz.dsk.Sockets;
 
 import java.net.InetAddress;
+import java.security.PublicKey;
 
 import Nodes.Node;
 import wat.tomasz.dsk.Survey;
@@ -29,7 +30,13 @@ public class NodeSocket extends Socket implements Runnable {
 			if(split[0].equals("NODE_JOIN_REQUEST")) {
 				System.out.println("Odebrano " + message);
 				String myKey = Utils.getPublicKeyString(survey.getConfigManager().getPublicKey());
-				int recid = survey.getNodesManager().addNode(new Node(receiver, port, Utils.getPublicKeyFromString(split[1]) ) );
+				
+				PublicKey senderKey = Utils.getPublicKeyFromString(split[1]);
+				
+				if(survey.getNodesManager().nodeExists(senderKey))
+					return;
+				
+				int recid = survey.getNodesManager().addNode(new Node(receiver, port, senderKey ) );
 				this.sendData(new CustomPacket("NODE_JOIN_ACCEPT " + recid + " " + myKey), receiver, port);
 			}
 		}	

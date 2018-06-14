@@ -1,5 +1,6 @@
 package Nodes;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 
 public class NodesManager {
@@ -24,6 +25,14 @@ public class NodesManager {
 	public boolean nodeExists(int id) {
 		for (Node n : nodeList) {
 			if(n.getId() == id)
+				return true;
+		}
+		return false;
+	}
+	
+	public boolean nodeExists(PublicKey key) {
+		for (Node n : nodeList) {
+			if(n.getKey().equals(key))
 				return true;
 		}
 		return false;
