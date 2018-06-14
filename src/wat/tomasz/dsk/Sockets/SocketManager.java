@@ -57,7 +57,7 @@ public class SocketManager {
 			for(String pocket : ( (RequestSocket) socket).getResponses()) {
 				String [] split = pocket.split(" ");
 				if(split.length == 3) {
-					if(split[0].equals("NODE_ACCEPT_REQUEST") ) {
+					if(split[0].equals("NODE_JOIN_ACCEPT") ) {
 						int id = Utils.getInt(split[1]);
 						PublicKey keyfile = Utils.getPublicKeyFromString(split[2]);
 						int i = 0;
