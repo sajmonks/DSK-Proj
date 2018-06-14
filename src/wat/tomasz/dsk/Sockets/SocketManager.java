@@ -60,10 +60,9 @@ public class SocketManager {
 					if(split[0].equals("NODE_JOIN_ACCEPT") ) {
 						int id = Utils.getInt(split[1]);
 						PublicKey keyfile = Utils.getPublicKeyFromString(split[2]);
-						int i = 0;
-						if( (i = Utils.getInt(split[2]) ) > 0 ) {
+						if( (id = Utils.getInt(split[2]) ) > 0 ) {
 							nodeManager.setNode(0, new Node(address, port, keyfile) );
-							return i;
+							return id;
 						}	
 						System.out.println("Odebrano " + pocket);
 					}
