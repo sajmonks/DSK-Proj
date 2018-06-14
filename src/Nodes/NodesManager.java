@@ -11,7 +11,7 @@ public class NodesManager {
 	
 	public int addNode(Node node) {
 		nodeList.add(node);
-		int id = nodeList.size() - 1;
+		int id = nodeList.size();
 		node.setId( id );
 		return id;
 	}

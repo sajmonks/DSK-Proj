@@ -13,6 +13,7 @@ public class NodeSocket extends Socket implements Runnable {
 	
 	public NodeSocket(Survey survey, int port) {
 		super(port);
+		this.survey = survey;
 	}
 
 	@Override
@@ -25,17 +26,13 @@ public class NodeSocket extends Socket implements Runnable {
 		}
 		
 		if(split.length == 2) {
-			if(split[0].equals("NODE_JOIN_REQUEST")) {
-				if(split[1].length() > 0) {
-					System.out.println("Odebrano " + message);
-					String myKey = Utils.getPublicKeyString(survey.getConfigManager().getPublicKey());
-					int recid = survey.getNodesManager().addNode(new Node(receiver, port, Utils.getPublicKeyFromString(split[1]) ) );	
-					this.sendData(new CustomPacket("NODE_JOIN_ACCEPT " + recid + " " + myKey), receiver, port);
-				}
+			if(split[0].equals("NODE_JOIN_ACCEPT")) {
+				System.out.println("Odebrano " + message);
+				String myKey = Utils.getPublicKeyString(survey.getConfigManager().getPublicKey());
+				int recid = survey.getNodesManager().addNode(new Node(receiver, port, Utils.getPublicKeyFromString(split[1]) ) );
+				this.sendData(new CustomPacket("NODE_JOIN_ACCEPT " + recid + " " + myKey), receiver, port);
 			}
-		}
-		
-		
+		}	
 	}
 
 	@Override

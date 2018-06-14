@@ -8,6 +8,7 @@ public abstract class Packet {
 	}
 	
 	public byte [] getData() {
+		System.out.println("Wysy³anie" + packetString);
 		return packetString.getBytes();
 	}
 }

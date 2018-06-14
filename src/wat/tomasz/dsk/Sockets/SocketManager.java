@@ -5,15 +5,26 @@ import java.security.PublicKey;
 
 import Nodes.Node;
 import Nodes.NodesManager;
+import wat.tomasz.dsk.Survey;
 import wat.tomasz.dsk.Utils.Utils;
 
 public class SocketManager {
 	Socket socket;
 	
-	NodesManager nodeManager;
+	Survey			survey;
+	NodesManager 	nodeManager;
 	
-	public SocketManager(NodesManager manager) {
+	Thread socketThread = null;
+	
+	public SocketManager(Survey survey, NodesManager manager) {
 		this.nodeManager = manager;
+		this.survey = survey;
+	}
+	
+	public void startNode(int port) {
+		socket = new NodeSocket(survey, port);
+		socketThread = new Thread( ((NodeSocket) socket) );
+		socketThread.start();
 	}
 	
 	public boolean requestPing(InetAddress address, int port, int listenAddress) {

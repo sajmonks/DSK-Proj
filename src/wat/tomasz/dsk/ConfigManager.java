@@ -98,7 +98,7 @@ public class ConfigManager {
 			e.printStackTrace();
 			return false;
 		}
-		System.out.println("Wczytano klucz publiczny.");
+		System.out.println("Wczytano klucz publiczny. " + Utils.getPublicKeyString(publicKey));
 		return true;
 	}
 	
@@ -128,7 +128,7 @@ public class ConfigManager {
 			e.printStackTrace();
 			return false;
 		}
-		System.out.println("Wczytano klucz prywatny.");
+		System.out.println("Wczytano klucz prywatny. " + Utils.getPrivateKeyString(privateKey));
 		return true;
 	}
 	

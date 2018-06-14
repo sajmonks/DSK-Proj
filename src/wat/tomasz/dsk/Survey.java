@@ -18,7 +18,7 @@ public class Survey extends Application {
 
 	private ConfigManager configManager 			= new ConfigManager();
 	private NodesManager nodesManager				= new NodesManager();
-	private SocketManager socketManager				= new SocketManager(nodesManager);
+	private SocketManager socketManager				= new SocketManager(this, nodesManager);
 	private SurveyController surveyController 		= null;
 	
 	public static void main(String[] args) {
@@ -57,6 +57,7 @@ public class Survey extends Application {
 		if(inNetwork) {
 			getController().setListenPort(getConfigManager().getListenPort());
 			getController().setSurveyView();
+			getSocketManager().startNode(getConfigManager().getListenPort());
 		}
 		else {
 			getController().setConnectionView();

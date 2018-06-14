@@ -50,6 +50,7 @@ public class SurveyController {
 		}
 		
 		FileManager.writeParameters(0, listenPort);
+		getSurvey().getSocketManager().startNode(listenPort);
 		
 		//TODO ZMIANA STANU
 	}
@@ -100,7 +101,10 @@ public class SurveyController {
 				getSurvey().showDialogError("B³¹d", "Nie uzyskano akceptacji od wêz³a");
 			}
 			else {
-				//TODO ZMIANA STANU
+				getSurvey().getSocketManager().startNode(listenPort);
+				//FileManager.writeParameters(id,  listenPort);
+				getSurvey().getController().setSurveyView();
+				getSurvey().getSocketManager().startNode(listenPort);
 			}
 		}
 	}
