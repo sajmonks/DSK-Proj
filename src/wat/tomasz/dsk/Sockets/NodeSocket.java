@@ -26,7 +26,7 @@ public class NodeSocket extends Socket implements Runnable {
 		}
 		
 		if(split.length == 2) {
-			if(split[0].equals("NODE_JOIN_ACCEPT")) {
+			if(split[0].equals("NODE_JOIN_REQUEST")) {
 				System.out.println("Odebrano " + message);
 				String myKey = Utils.getPublicKeyString(survey.getConfigManager().getPublicKey());
 				int recid = survey.getNodesManager().addNode(new Node(receiver, port, Utils.getPublicKeyFromString(split[1]) ) );
