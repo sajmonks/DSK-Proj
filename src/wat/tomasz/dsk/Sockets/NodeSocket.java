@@ -215,7 +215,7 @@ public class NodeSocket extends Socket implements Runnable {
 				ArrayList<String> answers = new ArrayList<String>();
 				String title = null;
 				String [] ansSplit = message.split("/");
-				if(ansSplit[0].equals("START_PACK") 
+				if(ansSplit[1].equals("START_PACK") 
 						&& ansSplit[ansSplit.length - 1].equals("END_PACK")) {
 					for(int i = 1; i < ansSplit.length - 1; i++) {
 						if(i == 0) {
