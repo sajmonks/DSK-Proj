@@ -30,6 +30,10 @@ public class Survey extends Application {
 	}
 	
 	public Survey() {	
+		SurveyController.setSurvey(this);
+		CreateSurveyController.setSurvey(this);
+		SurveyCheckController.setSurvey(this);
+		SurveyVoteController.setSurvey(this);
 	}
 
 	@Override
@@ -37,7 +41,6 @@ public class Survey extends Application {
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("Survey.fxml").openStream());
 		surveyController = loader.getController();
-		surveyController.setSurvey(this);
 		stage.setTitle("Diagnostyka systemów komputerowych");
 		stage.setScene(new Scene(root ));
 		stage.show();

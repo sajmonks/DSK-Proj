@@ -185,7 +185,27 @@ public class NodeSocket extends Socket implements Runnable {
 		//-----------------------------------------------------------------------------
 		
 		//NODE USERS RESPONSE ---------------------------------------------------------
-		
+		if(split.length == 7) {
+			if(split[0].equals("NODE_ANSWER_CREATED")) {
+				int target = Utils.getInt(split[1]);
+				int id = Utils.getInt(split[2]);
+				int author = Utils.getInt(split[3]);
+				int question = Utils.getInt(split[4]);
+				int answer = Utils.getInt(split[5]);
+				String signature = split[6];
+				
+				if(target != survey.getConfigManager().getSelfId())
+					return;
+				
+				String signText =  "" + author + "" + question + "" + answer;
+				if(Utils.verifySignature(signText, signature, survey.getNodesManager().getNode(author).getKey())) {
+					System.out.println("Pomyœlnie zweryfikowana odpowiedz");
+					survey.getAnswersManager().addAnswer( new Answer(author, question, answer, signature) );
+				}
+				
+				broadcastAnswers(id);
+			}
+		}
 		//-----------------------------------------------------------------------------
 		
 		//NODE ANSWERS REQUEST --------------------------------------------------------
@@ -237,6 +257,7 @@ public class NodeSocket extends Socket implements Runnable {
 				for(String a : answers) packet += a;
 					
 				if(Utils.verifySignature(packet, signature, survey.getNodesManager().getNode(id).getKey())) {
+					System.out.println("HERE");
 					survey.getSurveysManager().setSurvey(survid, new SurveyHolder(author, type, title, answers, signature) );
 				}			
 			}
@@ -297,6 +318,7 @@ public class NodeSocket extends Socket implements Runnable {
 			broadcast("NODE JOINED", n.toPacket());
 	}
 	
+	
 	public void broadcastSurveys() {
 		for(SurveyHolder sur : survey.getSurveysManager().getSurveys()) {
 			broadcastSurvey(sur);
@@ -304,8 +326,11 @@ public class NodeSocket extends Socket implements Runnable {
 	}
 	
 	public void broadcastSurvey(SurveyHolder sur) {
-		System.out.println("NODE_SURVEY_CREATED" + sur.toPacket());
-		broadcast( "NODE_SURVEY_CREATED", sur.toPacket() );
+		broadcast("NODE_SURVEY_CREATED", sur.toPacket() );
+	}
+	
+	public void broadcastAnswer(Answer ans) {
+		broadcast("NODE_ANSWER_CREATED", ans.toPacket());
 	}
 	
 	public void broadcastAnswers(int target) {

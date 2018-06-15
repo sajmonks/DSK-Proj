@@ -24,6 +24,17 @@ public class AnswersManager {
 		return true;
 	}
 	
+	public Answer getAnswer(int author, int question) {
+		for (Answer ans : answers) {
+			if(ans.getAuthor() == author) {
+				if(ans.getQuestion() == question) {
+					return ans;
+				}
+			}
+		}
+		return null;
+	}
+	
 	public int getAnwerersSize() {
 		return answers.size();
 	}

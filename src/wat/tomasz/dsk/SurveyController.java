@@ -13,7 +13,7 @@ import wat.tomasz.dsk.Files.FileManager;
 import wat.tomasz.dsk.Utils.Utils;
 
 public class SurveyController {
-	private Survey survey;
+	private static Survey survey;
 	
 	@FXML
 	private TextField fieldAddress;
@@ -113,12 +113,27 @@ public class SurveyController {
 			FXMLLoader fxmlLoader = new FXMLLoader();
 			fxmlLoader.setLocation(getClass().getResource("CreateSurvey.fxml"));
 			Scene scene = new Scene(fxmlLoader.load());
+			
 			Stage stage = new Stage();
 			stage.setTitle("Twórz ankiete");
 			stage.setScene(scene);
 			stage.show();
-			CreateSurveyController controller = fxmlLoader.getController();
-			controller.setSurvey(survey);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@FXML
+	public void onCheckSurveys() {
+		try {
+			FXMLLoader fxmlLoader = new FXMLLoader();
+			fxmlLoader.setLocation(getClass().getResource("SurveyCheck.fxml"));
+			Scene scene = new Scene(fxmlLoader.load());
+			
+			Stage stage = new Stage();
+			stage.setTitle("Przegl¹daj ankiety");
+			stage.setScene(scene);
+			stage.show();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -138,11 +153,11 @@ public class SurveyController {
 		fieldListenPort.setText("" + port);
 	}
 
-	public Survey getSurvey() {
+	public static Survey getSurvey() {
 		return survey;
 	}
 
-	public void setSurvey(Survey survey) {
-		this.survey = survey;
+	public static void setSurvey(Survey surv) {
+		survey = surv;
 	}
 }

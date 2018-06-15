@@ -83,6 +83,7 @@
                      </children>
                   </GridPane>
                   <Button mnemonicParsing="false" onAction="#onSurveyCreate" text="Utwórz ankiete" />
+                  <Button mnemonicParsing="false" onAction="#onCheckSurveys" text="Przeglądaj ankiety" />
                </children>
             </VBox>
          </children>

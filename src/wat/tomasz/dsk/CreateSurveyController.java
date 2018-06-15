@@ -13,7 +13,7 @@ import javafx.scene.control.TextField;
 
 public class CreateSurveyController {
 	
-	private Survey survey = null;
+	private static Survey survey = null;
 	
 	ArrayList<TextField> fields = new ArrayList<TextField>();
 	
@@ -28,6 +28,7 @@ public class CreateSurveyController {
 	
 	@FXML
 	private void initialize() {	
+		
 	}
 	
 	@FXML
@@ -91,7 +92,7 @@ public class CreateSurveyController {
 		}
 	}
 	
-	public void setSurvey(Survey survey) {
-		this.survey = survey;
+	public static void setSurvey(Survey surv) {
+		survey = surv;
 	}
 }
