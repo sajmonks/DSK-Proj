@@ -151,7 +151,6 @@ public class Utils {
 	}
 	
 	public static boolean verifySignature(String signatureData, String signature, PublicKey key) {
-		System.out.println("dane:" + signatureData);
 		byte[] data = signatureData.getBytes();
 		Signature dsa;
 		try {

@@ -197,13 +197,14 @@ public class NodeSocket extends Socket implements Runnable {
 				if(target != survey.getConfigManager().getSelfId())
 					return;
 				
+				if(survey.getAnswersManager().isValidAuthor(author, question))
+					return;
+				
 				String signText =  "" + author + "" + question + "" + answer;
 				if(Utils.verifySignature(signText, signature, survey.getNodesManager().getNode(author).getKey())) {
 					System.out.println("Pomyœlnie zweryfikowana odpowiedz");
 					survey.getAnswersManager().addAnswer( new Answer(author, question, answer, signature) );
 				}
-				
-				broadcastAnswers(id);
 			}
 		}
 		//-----------------------------------------------------------------------------
@@ -217,7 +218,7 @@ public class NodeSocket extends Socket implements Runnable {
 				if(target != survey.getConfigManager().getSelfId())
 					return;
 				
-				broadcastAnswers(id);
+				broadcastAnswers();
 			}
 		}
 		//-----------------------------------------------------------------------------
@@ -257,7 +258,6 @@ public class NodeSocket extends Socket implements Runnable {
 				for(String a : answers) packet += a;
 					
 				if(Utils.verifySignature(packet, signature, survey.getNodesManager().getNode(id).getKey())) {
-					System.out.println("HERE");
 					survey.getSurveysManager().setSurvey(survid, new SurveyHolder(author, type, title, answers, signature) );
 				}			
 			}
@@ -333,13 +333,9 @@ public class NodeSocket extends Socket implements Runnable {
 		broadcast("NODE_ANSWER_CREATED", ans.toPacket());
 	}
 	
-	public void broadcastAnswers(int target) {
-		if(survey.getNodesManager().nodeExists(target)) {
-			Node n = survey.getNodesManager().getNode(target);
-			for(Answer ans : survey.getAnswersManager().getAnswers()) {
-				String info = ans.toPacket();
-				this.sendData(new CustomPacket("NODE_ANSWERS_RESPONSE " + target + " " + info), n.getAddress(), n.getPort());
-			}
+	public void broadcastAnswers() {
+		for(Answer ans : survey.getAnswersManager().getAnswers()) {
+			broadcast("NODE_ANSWER_CREATED", ans.toPacket());
 		}
 	}
 	

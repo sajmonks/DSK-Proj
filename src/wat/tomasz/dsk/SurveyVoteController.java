@@ -84,7 +84,6 @@ public class SurveyVoteController {
 							Boolean newValue) {
 						if(oldValue != newValue) {
 							if(newValue == true) {
-								System.out.println("CHECKED NR " + index);
 								activeCheck = index;
 							}
 						}
