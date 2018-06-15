@@ -35,6 +35,18 @@ public class AnswersManager {
 		return null;
 	}
 	
+	public int getAnswerCount(int question, int answer) {
+		int count = 0;
+		for (Answer ans : answers) {
+			if(ans.getAnswer() == answer) {
+				if(ans.getQuestion() == question) {
+					count ++ ;
+				}
+			}
+		}
+		return count;
+	}
+	
 	public int getAnwerersSize() {
 		return answers.size();
 	}

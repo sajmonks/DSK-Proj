@@ -2,6 +2,7 @@ package wat.tomasz.dsk;
 
 import Answers.Answer;
 import Surveys.SurveyHolder;
+import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -12,6 +13,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 import wat.tomasz.dsk.Utils.Utils;
 
 public class SurveyVoteController {
@@ -26,6 +28,13 @@ public class SurveyVoteController {
 	@FXML
 	Label title;
 	
+	@FXML
+	Button voteButton;
+	
+	private boolean voted = false;
+	private boolean author = false;
+	private boolean canShow = false;
+	
 	
 	public SurveyVoteController(int question) {
 		this.question = question;
@@ -33,9 +42,25 @@ public class SurveyVoteController {
 	
 	@FXML
 	private void initialize() {
+		if(survey.getConfigManager().getSelfId() == survey.getSurveysManager().getSurvey(question).getAuthor())
+			author = true;
+		
+		if(!survey.getAnswersManager().isValidAuthor(survey.getConfigManager().getSelfId(), question)) {
+			voted = true;
+			voteButton.setDisable(true);
+		}
+		
 		SurveyHolder sur = survey.getSurveysManager().getSurvey(question);
 		if(sur != null) {
 			title.setText(sur.getQuestion());
+			
+			if(author == true || (sur.getType() == 0 && voted) ) {
+				Label reslabel = new Label();
+				reslabel.setText("Wynik");
+				
+				grid.add(reslabel, 2, 0);
+				canShow = true;
+			}
 			
 			int idx = 1;
 			final ToggleGroup group = new ToggleGroup();
@@ -47,6 +72,9 @@ public class SurveyVoteController {
 				RadioButton radio = new RadioButton();
 				radio.setToggleGroup(group);
 				radio.setSelected(false);
+				
+				if(voted)
+					radio.setDisable(true);
 				
 				radio.selectedProperty().addListener(new ChangeListener<Boolean>() {
 					private int index = id;
@@ -63,8 +91,16 @@ public class SurveyVoteController {
 					}
 				});
 			
+				if(canShow) {
+					Label result = new Label();
+					result.setText(""+survey.getAnswersManager().getAnswerCount(question, idx));
+					
+					grid.add(result, 2, idx);
+				}
+				
 				grid.add(lans, 1, idx);
 				grid.add(radio, 0, idx);
+				
 				idx++;
 			}		
 			
@@ -75,6 +111,7 @@ public class SurveyVoteController {
 	public void onVoted() {
 		if(question < 0 || activeCheck < 0) {
 			survey.showDialogError("Musisz wybraæ opcje przed zag³osowaniem", "Musisz wybraæ opcje przed zag³osowaniem");
+			return;
 		}
 		
 		int myid = survey.getConfigManager().getSelfId();
@@ -82,7 +119,11 @@ public class SurveyVoteController {
 		String siganture = Utils.getSignString(signText, survey.getConfigManager().getPrivateKey());
 		
 		Answer answer = new Answer(myid, question, activeCheck, siganture);
+		survey.getAnswersManager().addAnswer(answer);
 		survey.getSocketManager().getNodeSocket().broadcastAnswer(answer);
+		voteButton.setDisable(true);
+		Stage stage = (Stage) voteButton.getScene().getWindow();
+		stage.close();
 		
 	}
 	
