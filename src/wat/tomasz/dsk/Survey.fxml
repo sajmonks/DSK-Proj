@@ -82,6 +82,7 @@
                         <Label GridPane.rowIndex="2" />
                      </children>
                   </GridPane>
+                  <Button mnemonicParsing="false" onAction="#onSurveyCreate" text="Utwórz ankiete" />
                </children>
             </VBox>
          </children>

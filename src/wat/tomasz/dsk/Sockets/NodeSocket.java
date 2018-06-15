@@ -23,6 +23,8 @@ public class NodeSocket extends Socket implements Runnable {
 	public void onReceiveData(String message, InetAddress receiver, int port) {
 		String [] split = message.split(" ");
 		
+		System.out.println("Odebrano " + message);
+		
 		//NODE PING------------------------------------------------------------------
 		if(split.length == 1) {
 			if(split[0].equals("NODE_PING")) {
@@ -34,7 +36,6 @@ public class NodeSocket extends Socket implements Runnable {
 		//NODE JOIN_REQUEST------------------------------------------------------------
 		if(split.length == 2) {
 			if(split[0].equals("NODE_JOIN_REQUEST")) {
-				System.out.println("Odebrano " + message);
 				String myKey = Utils.getPublicKeyString(survey.getConfigManager().getPublicKey());
 				
 				PublicKey senderKey = Utils.getPublicKeyFromString(split[1]);
@@ -44,6 +45,30 @@ public class NodeSocket extends Socket implements Runnable {
 				
 				int recid = survey.getNodesManager().addNode(new Node(receiver, port, senderKey ) );
 				this.sendData(new CustomPacket("NODE_JOIN_ACCEPT " + recid + " " + myKey), receiver, port);
+				this.broadcastNewNode(survey.getNodesManager().getNode(recid));
+			}
+		}	
+		//-----------------------------------------------------------------------------
+		
+		//NODE JOIN_REQUEST------------------------------------------------------------
+		if(split.length == 7) {
+			if(split[0].equals("NODE_JOINED")) {
+				int target = Utils.getInt(split[1]);
+				int id = Utils.getInt(split[2]);
+				int idnew = Utils.getInt(split[3]);
+				String address = split[4];
+				int newport = Utils.getInt(split[5]);
+				String pubkey = split[6];
+				
+				if(target != survey.getConfigManager().getSelfId())
+					return;
+				
+				if(!survey.getNodesManager().nodeExists(idnew)) {
+					survey.getNodesManager().setNode(idnew, new Node(Utils.getAddress(address), newport, 
+							Utils.getPublicKeyFromString(pubkey) ) );
+					
+					System.out.println("Do³¹czy³ nowy wêze³ id=" + id);
+				}
 			}
 		}	
 		//-----------------------------------------------------------------------------
@@ -138,6 +163,7 @@ public class NodeSocket extends Socket implements Runnable {
 				if(target != survey.getConfigManager().getSelfId())
 					return;
 				
+				
 				if(survey.getSurveysManager().getSurveysSize() <= num)
 					this.sendData(new CustomPacket("NODE_SURVEYS_REQUEST " + id + " " + target), receiver, port);
 			}
@@ -177,7 +203,17 @@ public class NodeSocket extends Socket implements Runnable {
 		//-----------------------------------------------------------------------------
 		
 		//NODE ANSWERS RESPONSE -------------------------------------------------------
-		
+		if(split.length > 5) {
+			if(split[0].equals("NODE_SURVEY_CREATED")) {
+				int targetid = Utils.getInt(split[1]);
+				int id = Utils.getInt(split[2]);
+				int survid = Utils.getInt(split[3]);
+				int author = Utils.getInt(split[4]);
+				int type = Utils.getInt(split[5]);
+				String signature = split[6];
+				
+			}
+		}
 		//-----------------------------------------------------------------------------
 		
 		//NODE SURVEYS REQUEST --------------------------------------------------------
@@ -189,7 +225,7 @@ public class NodeSocket extends Socket implements Runnable {
 				if(target != survey.getConfigManager().getSelfId())
 					return;
 				
-				broadcastSurveys(id);
+				broadcastSurveys();
 			}
 		}
 		//-----------------------------------------------------------------------------
@@ -223,14 +259,26 @@ public class NodeSocket extends Socket implements Runnable {
 		}	
 	}
 	
-	public void broadcastSurveys(int target) {
-		if(survey.getNodesManager().nodeExists(target)) {
-			Node n = survey.getNodesManager().getNode(target);
-			for(SurveyHolder sur : survey.getSurveysManager().getSurveys()) {
-				String info = sur.toPacket();
-				this.sendData(new CustomPacket("NODE_SURVEYS_RESPONSE " + target + " " + info), n.getAddress(), n.getPort());
-			}
+	public void broadcast(String packetName, String packetData) {
+		for(Node n : survey.getNodesManager().getNodes()) {
+			this.sendData(new CustomPacket(packetName + " " + n.getId() + " " + survey.getConfigManager().getSelfId() + " " + packetData),
+					n.getAddress(), n.getPort());
 		}
+	}
+	
+	public void broadcastNewNode(Node n) {				
+			broadcast("NODE JOINED", n.toPacket());
+	}
+	
+	public void broadcastSurveys() {
+		for(SurveyHolder sur : survey.getSurveysManager().getSurveys()) {
+			broadcastSurvey(sur);
+		}
+	}
+	
+	public void broadcastSurvey(SurveyHolder sur) {
+		System.out.println("NODE_SURVEY_CREATED " + sur.toPacket());
+		broadcast( "NODE_SURVEY_CREATED ", sur.toPacket() );
 	}
 	
 	public void broadcastAnswers(int target) {

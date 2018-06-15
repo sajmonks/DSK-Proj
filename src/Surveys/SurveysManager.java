@@ -10,15 +10,13 @@ public class SurveysManager {
 	}
 	
 	public int addSurvey(SurveyHolder holder) {
-		surveys.add(holder);
-		
+		surveys.add(holder);	
 		int id = surveys.size();
 		holder.setId(id);
-		
 		return id;
 	}
 	
-	public boolean containId(int id) {
+	public boolean surveyExists(int id) {
 		for(SurveyHolder survey : surveys) {
 			if(survey.getId() == id)
 				return true;

@@ -21,14 +21,14 @@ public class SurveyHolder {
 		String packet = id + " ";
 		packet += author + " ";
 		packet += type + " ";
-		packet += question + "|";
+		packet += signature + " " ;
+		packet += "|START_PACK|" + question + "|";
 		
 		for(int i = 0; i < answers.size(); i++) {
 			packet += answers.get(i) + "|";
 		}
 		
-		packet += "END_PACK" + " ";
-		packet += signature;
+		packet += "END_PACK";
 		
 		return packet;	
 	}

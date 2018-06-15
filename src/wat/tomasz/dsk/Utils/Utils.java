@@ -3,8 +3,10 @@ package wat.tomasz.dsk.Utils;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
@@ -129,9 +131,19 @@ public class Utils {
 		return null;
 	}
 	
-	public static String getSignatureString(Signature sign) {
+	public static String getSignString(String sign, PrivateKey key) {
+		Signature dsa = null;
 		try {
-			return base64Encode(sign.sign());
+			dsa = Signature.getInstance("SHA1withDSA", "SUN");
+			dsa.initSign(key);
+			dsa.update(sign.getBytes());
+			return Utils.base64Encode(dsa.sign());
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (NoSuchProviderException e) {
+			e.printStackTrace();
+		} catch (InvalidKeyException e) {
+			e.printStackTrace();
 		} catch (SignatureException e) {
 			e.printStackTrace();
 		}

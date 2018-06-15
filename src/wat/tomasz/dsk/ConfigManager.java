@@ -189,6 +189,10 @@ public class ConfigManager {
 	public PublicKey getPublicKey() {
 		return publicKey;
 	}
+	
+	public PrivateKey getPrivateKey() {
+		return privateKey;
+	}
 
 	public void setPublicKey(PublicKey publicKey) {
 		this.publicKey = publicKey;

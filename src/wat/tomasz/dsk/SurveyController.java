@@ -1,10 +1,14 @@
 package wat.tomasz.dsk;
 
+import java.io.IOException;
 import java.net.InetAddress;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import wat.tomasz.dsk.Files.FileManager;
 import wat.tomasz.dsk.Utils.Utils;
 
@@ -99,6 +103,23 @@ public class SurveyController {
 				getSurvey().getController().setSurveyView();
 				getSurvey().getSocketManager().startNode(listenPort);
 			}
+		}
+	}
+	
+	@FXML
+	public void onSurveyCreate() {
+		try {
+			FXMLLoader fxmlLoader = new FXMLLoader();
+			fxmlLoader.setLocation(getClass().getResource("CreateSurvey.fxml"));
+			Scene scene = new Scene(fxmlLoader.load());
+			Stage stage = new Stage();
+			stage.setTitle("Twórz ankiete");
+			stage.setScene(scene);
+			stage.show();
+			CreateSurveyController controller = fxmlLoader.getController();
+			controller.setSurvey(survey);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	

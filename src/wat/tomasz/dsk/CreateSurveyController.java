@@ -2,19 +2,29 @@ package wat.tomasz.dsk;
 
 import java.util.ArrayList;
 
+import Surveys.SurveyHolder;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
+import wat.tomasz.dsk.Utils.Utils;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 public class CreateSurveyController {
 	
-	private Survey createSurvey = null;
+	private Survey survey = null;
 	
 	ArrayList<TextField> fields = new ArrayList<TextField>();
 	
 	@FXML
+	TextField title;
+	
+	@FXML
 	private GridPane optionGrid;
+	
+	@FXML
+	private CheckBox annonymous;
 	
 	@FXML
 	private void initialize() {	
@@ -40,10 +50,47 @@ public class CreateSurveyController {
 	
 	@FXML
 	public void sendSurvey() {
-		
+		if(survey != null) {
+			ArrayList<String> options = new ArrayList<String>();
+			String header = title.getText();
+			
+			if(header.length() <= 1)  {
+				survey.showDialogError("B³¹d wpisywania", "Za krótki tekst");
+				return;
+			}
+			
+			if(options.size() == 0) {
+				survey.showDialogError("Brak opcji", "Brak opcji");
+			}
+				
+			for(TextField tf : fields) {
+				String opt = tf.getText();
+				if(opt.length() <= 2 && opt.length() != 0) {
+					survey.showDialogError("B³¹d wpisywania", "Za krótki tekst");
+					return;
+				}
+				
+				if(opt.length() > 0)
+					options.add(opt);
+			}
+			
+			String sign = header;
+			for(String opt : options) sign += opt;
+			
+			SurveyHolder holder = new SurveyHolder(
+					survey.getConfigManager().getSelfId(), 
+					(annonymous.isSelected() ? 1 : 0), header, options, Utils.getSignString(sign, survey.getConfigManager().getPrivateKey()));
+			
+			
+			survey.getSurveysManager().addSurvey(holder);
+			survey.getSocketManager().getNodeSocket().broadcastSurvey(holder);
+			
+			Stage stage = (Stage) title.getScene().getWindow();
+			stage.close();
+		}
 	}
 	
 	public void setSurvey(Survey survey) {
-		this.createSurvey = survey;
+		this.survey = survey;
 	}
 }

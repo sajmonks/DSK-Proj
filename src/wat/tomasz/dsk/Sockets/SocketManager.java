@@ -72,4 +72,11 @@ public class SocketManager {
 		return survey;
 	}
 	
+	public NodeSocket getNodeSocket() {
+		if(socket.isSocketActive()) {
+			return (NodeSocket) socket;
+		}
+		return null;
+	}
+	
 }
