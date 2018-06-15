@@ -150,6 +150,21 @@ public class Utils {
 		return null;
 	}
 	
+	public static boolean verifySignature(String signatureData, String signature, PublicKey key) {
+		byte[] data = signatureData.getBytes();
+		Signature dsa;
+		try {
+			dsa = Signature.getInstance("SHA1withDSA", "SUN");
+			dsa.initVerify(key);
+			dsa.verify(data);
+			return dsa.verify(base64Decode(signature));
+		} catch (NoSuchAlgorithmException | NoSuchProviderException | SignatureException | InvalidKeyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		return false;
+	}
+	
 	public static byte [] base64Decode(String message) {
 		return Base64.getDecoder().decode(message);
 	}

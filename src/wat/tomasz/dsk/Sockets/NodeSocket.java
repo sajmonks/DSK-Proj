@@ -2,6 +2,7 @@ package wat.tomasz.dsk.Sockets;
 
 import java.net.InetAddress;
 import java.security.PublicKey;
+import java.util.ArrayList;
 
 import Answers.Answer;
 import Nodes.Node;
@@ -212,6 +213,25 @@ public class NodeSocket extends Socket implements Runnable {
 				int type = Utils.getInt(split[5]);
 				String signature = split[6];
 				
+				ArrayList<String> answers = new ArrayList<String>();
+				String title = null;
+				String [] ansSplit = message.split("|");
+				if(ansSplit[0].equals("START_PACK") 
+						&& ansSplit[ansSplit.length - 1].equals("END_PACK")) {
+					for(int i = 1; i < ansSplit.length - 1; i++) {
+						if(i == 0) {
+							title = ansSplit[1];
+						} else {
+							answers.add(ansSplit[i]);
+						}
+					}
+				}	
+				
+				String packet = title;
+				for(String a : answers) packet += a;
+				if(Utils.verifySignature(packet, signature, survey.getNodesManager().getNode(id).getKey())) {
+					System.out.print("Pozytywnie zweryfikowano");
+				}			
 			}
 		}
 		//-----------------------------------------------------------------------------
