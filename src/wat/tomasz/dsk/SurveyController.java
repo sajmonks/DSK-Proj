@@ -1,16 +1,10 @@
 package wat.tomasz.dsk;
 
 import java.net.InetAddress;
-import java.util.List;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import wat.tomasz.dsk.ConfigManager.MissingFiles;
 import wat.tomasz.dsk.Files.FileManager;
 import wat.tomasz.dsk.Utils.Utils;
 
@@ -52,7 +46,7 @@ public class SurveyController {
 		FileManager.writeParameters(0, listenPort);
 		getSurvey().getSocketManager().startNode(listenPort);
 		
-		//TODO ZMIANA STANU
+		//TODO ZMIANA STANU	
 	}
 	
 	@FXML
@@ -101,7 +95,6 @@ public class SurveyController {
 				getSurvey().showDialogError("B³¹d", "Nie uzyskano akceptacji od wêz³a");
 			}
 			else {
-				getSurvey().getSocketManager().startNode(listenPort);
 				//FileManager.writeParameters(id,  listenPort);
 				getSurvey().getController().setSurveyView();
 				getSurvey().getSocketManager().startNode(listenPort);

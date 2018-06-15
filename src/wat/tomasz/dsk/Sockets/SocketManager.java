@@ -2,22 +2,16 @@ package wat.tomasz.dsk.Sockets;
 
 import java.net.InetAddress;
 import java.security.PublicKey;
-
 import Nodes.Node;
-import Nodes.NodesManager;
 import wat.tomasz.dsk.Survey;
 import wat.tomasz.dsk.Utils.Utils;
 
 public class SocketManager {
-	Socket socket;
+	private Socket 				socket;
+	private Survey				survey;
+	private Thread 				socketThread = null;
 	
-	Survey			survey;
-	NodesManager 	nodeManager;
-	
-	Thread socketThread = null;
-	
-	public SocketManager(Survey survey, NodesManager manager) {
-		this.nodeManager = manager;
+	public SocketManager(Survey survey) {
 		this.survey = survey;
 	}
 	
@@ -61,7 +55,7 @@ public class SocketManager {
 						int id = Utils.getInt(split[1]);
 						PublicKey keyfile = Utils.getPublicKeyFromString(split[2]);
 						if( id > 0 ) {
-							nodeManager.setNode(0, new Node(address, port, keyfile) );
+							getSurvey().getNodesManager().setNode(0, new Node(address, port, keyfile) );
 							return id;
 						}	
 						System.out.println("Odebrano " + pocket);
@@ -73,4 +67,9 @@ public class SocketManager {
 		System.out.println("Nie uzyskano odpowiedzi");
 		return 0;
 	}
+	
+	public Survey getSurvey() {
+		return survey;
+	}
+	
 }

@@ -7,6 +7,8 @@ import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.Signature;
+import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -122,6 +124,15 @@ public class Utils {
 		    return Utils.base64Encode(spec.getEncoded());
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static String getSignatureString(Signature sign) {
+		try {
+			return base64Encode(sign.sign());
+		} catch (SignatureException e) {
 			e.printStackTrace();
 		}
 		return null;

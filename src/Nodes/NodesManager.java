@@ -37,4 +37,16 @@ public class NodesManager {
 		}
 		return false;
 	}
+	
+	public Node getNode(int id) {
+		return nodeList.get(id);
+	}
+	
+	public int getNodesSize() {
+		return nodeList.size();
+	}
+	
+	public ArrayList<Node> getNodes() {
+		return nodeList;
+	}
 }

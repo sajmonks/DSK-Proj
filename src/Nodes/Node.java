@@ -3,6 +3,8 @@ package Nodes;
 import java.net.InetAddress;
 import java.security.PublicKey;
 
+import wat.tomasz.dsk.Utils.Utils;
+
 public class Node {
 	private int id;
 	private InetAddress address;
@@ -15,6 +17,15 @@ public class Node {
 		this.setKey(key);
 	}
 
+	public String toPacket() {
+		String packet = id + " ";
+		packet += address.getHostAddress() + " ";
+		packet += port + " ";
+		packet += Utils.getPublicKeyString(key);
+		
+		return packet;	
+	}
+	
 	public InetAddress getAddress() {
 		return address;
 	}
