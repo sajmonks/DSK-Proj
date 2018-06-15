@@ -41,7 +41,7 @@ public class NodesManager {
 	public Node getNode(int id) {
 		for(Node n : nodeList) {
 			if(n.getId() == id)
-				return nodeList.get(id);
+				return n;
 		}
 		return null;
 	}

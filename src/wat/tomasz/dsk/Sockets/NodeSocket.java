@@ -39,14 +39,13 @@ public class NodeSocket extends Socket implements Runnable {
 			if(split[0].equals("NODE_JOIN_REQUEST")) {
 				String myKey = Utils.getPublicKeyString(survey.getConfigManager().getPublicKey());
 				
-				PublicKey senderKey = Utils.getPublicKeyFromString(split[1]);
-				
+				PublicKey senderKey = Utils.getPublicKeyFromString(split[1]);				
 				if(survey.getNodesManager().nodeExists(senderKey))
 					return;
 				
-				int recid = survey.getNodesManager().addNode(new Node(receiver, port, senderKey ) );
+				int recid = survey.getNodesManager().addNode(new Node(receiver, port, senderKey ) );		
 				this.sendData(new CustomPacket("NODE_JOIN_ACCEPT " + recid + " " + myKey), receiver, port);
-				this.broadcastNewNode(survey.getNodesManager().getNode(recid - 1));
+				this.broadcastNewNode(survey.getNodesManager().getNode(recid));
 			}
 		}	
 		//-----------------------------------------------------------------------------
@@ -229,6 +228,13 @@ public class NodeSocket extends Socket implements Runnable {
 				
 				String packet = title;
 				for(String a : answers) packet += a;
+				
+				if(survey.getNodesManager().getNode(id) == null)
+					System.out.println("A");
+				
+				if(survey.getNodesManager().getNode(id).getKey() == null)
+					System.out.println("B");
+					
 				if(Utils.verifySignature(packet, signature, survey.getNodesManager().getNode(id).getKey())) {
 					System.out.print("Pozytywnie zweryfikowano");
 				}			
@@ -297,8 +303,8 @@ public class NodeSocket extends Socket implements Runnable {
 	}
 	
 	public void broadcastSurvey(SurveyHolder sur) {
-		System.out.println("NODE_SURVEY_CREATED " + sur.toPacket());
-		broadcast( "NODE_SURVEY_CREATED ", sur.toPacket() );
+		System.out.println("NODE_SURVEY_CREATED" + sur.toPacket());
+		broadcast( "NODE_SURVEY_CREATED", sur.toPacket() );
 	}
 	
 	public void broadcastAnswers(int target) {

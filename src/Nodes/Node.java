@@ -9,7 +9,7 @@ public class Node {
 	private int id;
 	private InetAddress address;
 	private int port;
-	private PublicKey key;
+	private PublicKey pubkey;
 	
 	public Node(InetAddress address, int port, PublicKey key) {
 		this.setAddress(address);
@@ -21,7 +21,7 @@ public class Node {
 		String packet = id + " ";
 		packet += address.getHostAddress() + " ";
 		packet += port + " ";
-		packet += Utils.getPublicKeyString(key);
+		packet += Utils.getPublicKeyString(pubkey);
 		
 		return packet;	
 	}
@@ -43,11 +43,11 @@ public class Node {
 	}
 
 	public PublicKey getKey() {
-		return key;
+		return pubkey;
 	}
 
 	public void setKey(PublicKey key) {
-		this.key = key;
+		this.pubkey = key;
 	}
 
 	public int getId() {
