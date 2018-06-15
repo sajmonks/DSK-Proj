@@ -39,7 +39,11 @@ public class NodesManager {
 	}
 	
 	public Node getNode(int id) {
-		return nodeList.get(id);
+		for(Node n : nodeList) {
+			if(n.getId() == id)
+				return nodeList.get(id);
+		}
+		return null;
 	}
 	
 	public int getNodesSize() {
