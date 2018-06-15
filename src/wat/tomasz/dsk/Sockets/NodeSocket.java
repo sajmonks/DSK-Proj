@@ -101,7 +101,7 @@ public class NodeSocket extends Socket implements Runnable {
 				
 				System.out.println("MY US " + survey.getNodesManager().getNodesSize() + " " + num);
 				
-				if(survey.getNodesManager().getNodesSize() <= num)
+				if(survey.getNodesManager().getNodesSize() < num)
 					this.sendData(new CustomPacket("NODE_USERS_REQUEST " + id + " " + target), receiver, port);
 			}
 		}
@@ -133,7 +133,7 @@ public class NodeSocket extends Socket implements Runnable {
 				if(target != survey.getConfigManager().getSelfId())
 					return;
 				
-				if(survey.getAnswersManager().getAnwerersSize() <= num)
+				if(survey.getAnswersManager().getAnwerersSize() < num)
 					this.sendData(new CustomPacket("NODE_ANSWERS_REQUEST " + id + " " + target), receiver, port);
 			}
 		}
