@@ -59,8 +59,9 @@ public class CreateSurveyController {
 				return;
 			}
 			
-			if(options.size() == 0) {
+			if(fields.size() == 0) {
 				survey.showDialogError("Brak opcji", "Brak opcji");
+				return;
 			}
 				
 			for(TextField tf : fields) {

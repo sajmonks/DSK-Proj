@@ -45,7 +45,7 @@ public class NodeSocket extends Socket implements Runnable {
 				
 				int recid = survey.getNodesManager().addNode(new Node(receiver, port, senderKey ) );
 				this.sendData(new CustomPacket("NODE_JOIN_ACCEPT " + recid + " " + myKey), receiver, port);
-				this.broadcastNewNode(survey.getNodesManager().getNode(recid));
+				this.broadcastNewNode(survey.getNodesManager().getNode(recid - 1));
 			}
 		}	
 		//-----------------------------------------------------------------------------

@@ -206,5 +206,9 @@ public class ConfigManager {
 		return selfId;
 	}
 	
+	public void setSelfId(int id) {
+		selfId = id;
+	}
+	
 	
 }

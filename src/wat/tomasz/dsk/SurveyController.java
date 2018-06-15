@@ -99,6 +99,7 @@ public class SurveyController {
 				getSurvey().showDialogError("B³¹d", "Nie uzyskano akceptacji od wêz³a");
 			}
 			else {
+				getSurvey().getConfigManager().setSelfId(id);
 				//FileManager.writeParameters(id,  listenPort);
 				getSurvey().getController().setSurveyView();
 				getSurvey().getSocketManager().startNode(listenPort);
