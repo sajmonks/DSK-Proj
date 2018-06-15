@@ -16,6 +16,12 @@ public class SurveysManager {
 		return id;
 	}
 	
+	public int setSurvey(int id, SurveyHolder holder) {
+		surveys.add(holder);	
+		holder.setId(id);
+		return id;
+	}
+	
 	public boolean surveyExists(int id) {
 		for(SurveyHolder survey : surveys) {
 			if(survey.getId() == id)

@@ -151,12 +151,13 @@ public class Utils {
 	}
 	
 	public static boolean verifySignature(String signatureData, String signature, PublicKey key) {
+		System.out.println("dane:" + signatureData);
 		byte[] data = signatureData.getBytes();
 		Signature dsa;
 		try {
 			dsa = Signature.getInstance("SHA1withDSA", "SUN");
 			dsa.initVerify(key);
-			dsa.verify(data);
+			dsa.update(data);
 			return dsa.verify(base64Decode(signature));
 		} catch (NoSuchAlgorithmException | NoSuchProviderException | SignatureException | InvalidKeyException e) {
 			// TODO Auto-generated catch block

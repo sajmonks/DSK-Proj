@@ -212,31 +212,32 @@ public class NodeSocket extends Socket implements Runnable {
 				int type = Utils.getInt(split[5]);
 				String signature = split[6];
 				
+				if(survey.getSurveysManager().surveyExists(survid))
+					return;
+				
 				ArrayList<String> answers = new ArrayList<String>();
 				String title = null;
 				String [] ansSplit = message.split("/");
-				if(ansSplit[1].equals("START_PACK") 
-						&& ansSplit[ansSplit.length - 1].equals("END_PACK")) {
-					for(int i = 1; i < ansSplit.length - 1; i++) {
-						if(i == 0) {
-							title = ansSplit[1];
-						} else {
-							answers.add(ansSplit[i]);
+				boolean start = false;
+				for(int i = 1; i < ansSplit.length - 1; i++) {
+						if(ansSplit[i].equals("START_PACK")) {
+							start = true;
+							title = ansSplit[i+1];
+							i += 2;
 						}
-					}
-				}	
+						if(start) {
+							if(ansSplit[i].equals("END_PACK"))
+								break;
+							else
+								answers.add(ansSplit[i]);		
+						}
+				}
 				
 				String packet = title;
 				for(String a : answers) packet += a;
-				
-				if(survey.getNodesManager().getNode(id) == null)
-					System.out.println("A");
-				
-				if(survey.getNodesManager().getNode(id).getKey() == null)
-					System.out.println("B");
 					
 				if(Utils.verifySignature(packet, signature, survey.getNodesManager().getNode(id).getKey())) {
-					System.out.print("Pozytywnie zweryfikowano");
+					survey.getSurveysManager().setSurvey(survid, new SurveyHolder(author, type, title, answers, signature) );
 				}			
 			}
 		}
