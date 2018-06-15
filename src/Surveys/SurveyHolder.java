@@ -22,10 +22,10 @@ public class SurveyHolder {
 		packet += author + " ";
 		packet += type + " ";
 		packet += signature + " " ;
-		packet += "START_PACK|" + question + "|";
+		packet += "START_PACK/" + question + "/";
 		
 		for(int i = 0; i < answers.size(); i++) {
-			packet += answers.get(i) + "|";
+			packet += answers.get(i) + "/";
 		}
 		
 		packet += "END_PACK";
