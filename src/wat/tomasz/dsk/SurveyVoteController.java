@@ -114,7 +114,8 @@ public class SurveyVoteController {
 		}
 		
 		int myid = survey.getConfigManager().getSelfId();
-		String signText = myid + "" + question + "" + activeCheck;
+		String signText = "" + myid + "" + question + "" + activeCheck;
+		System.out.println("Podpisano jako" + signText);
 		String siganture = Utils.getSignString(signText, survey.getConfigManager().getPrivateKey());
 		
 		Answer answer = new Answer(myid, question, activeCheck, siganture);

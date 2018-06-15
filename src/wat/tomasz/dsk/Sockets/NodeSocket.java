@@ -204,6 +204,7 @@ public class NodeSocket extends Socket implements Runnable {
 					return;
 				
 				String signText =  "" + author + "" + question + "" + answer;
+				System.out.println("Odebrano jako: " + signText);
 				if(Utils.verifySignature(signText, signature, survey.getNodesManager().getNode(author).getKey())) {
 					System.out.println("Pomyœlnie zweryfikowana odpowiedz");
 					survey.getAnswersManager().addAnswer( new Answer(author, question, answer, signature) );
