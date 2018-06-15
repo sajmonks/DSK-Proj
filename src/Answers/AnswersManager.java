@@ -2,6 +2,8 @@ package Answers;
 
 import java.util.ArrayList;
 
+import wat.tomasz.dsk.SurveyController;
+
 public class AnswersManager {
 	ArrayList<Answer> answers = new ArrayList<Answer>();
 	
@@ -11,6 +13,7 @@ public class AnswersManager {
 	
 	public void addAnswer(Answer answer) {
 		answers.add(answer);
+		SurveyController.getSurvey().getController().updateMainWindow();
 	}
 	
 	public boolean isValidAuthor(int author, int question) {

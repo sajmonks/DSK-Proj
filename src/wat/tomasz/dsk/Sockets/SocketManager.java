@@ -38,6 +38,12 @@ public class SocketManager {
 		return false;
 	}
 	
+	public void closeThread() {
+		if(socket.isSocketActive()) {
+			socket.closeSocket();
+		}
+	}
+	
 	public int requestId(PublicKey key, InetAddress address, int port, int listenAddress) {
 		if(socket == null) {
 			System.out.println("Zadano NODE_REQUEST");

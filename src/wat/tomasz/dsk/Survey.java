@@ -3,17 +3,21 @@ package wat.tomasz.dsk;
 import java.util.List;
 
 import Answers.AnswersManager;
+import Nodes.Node;
 import Nodes.NodesManager;
 import Surveys.SurveysManager;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import wat.tomasz.dsk.ConfigManager.MissingFiles;
 import wat.tomasz.dsk.Sockets.SocketManager;
+import wat.tomasz.dsk.Utils.Utils;
 
 public class Survey extends Application {
 	
@@ -43,6 +47,16 @@ public class Survey extends Application {
 		surveyController = loader.getController();
 		stage.setTitle("Diagnostyka systemów komputerowych");
 		stage.setScene(new Scene(root ));
+		
+		stage.setOnHiding(new EventHandler<WindowEvent>() {
+
+			@Override
+			public void handle(WindowEvent arg0) {
+				getSocketManager().closeThread();
+			}
+			
+		});
+		
 		stage.show();
 
 		
@@ -60,6 +74,10 @@ public class Survey extends Application {
 		if(inNetwork) {
 			getController().setListenPort(getConfigManager().getListenPort());
 			getController().setSurveyView();
+			getNodesManager().setNode(0, new Node(Utils.getAddress("127.0.0.1"), //TODO
+			getConfigManager().getListenPort(), getConfigManager().getPublicKey()) );
+			getController().updateMainWindow();
+			
 			getSocketManager().startNode(getConfigManager().getListenPort());
 		}
 		else {

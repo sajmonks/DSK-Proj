@@ -3,6 +3,9 @@ package Nodes;
 import java.security.PublicKey;
 import java.util.ArrayList;
 
+import wat.tomasz.dsk.SurveyCheckController;
+import wat.tomasz.dsk.SurveyController;
+
 public class NodesManager {
 	ArrayList< Node > nodeList = new ArrayList < Node > ();
 	
@@ -14,12 +17,14 @@ public class NodesManager {
 		nodeList.add(node);
 		int id = nodeList.size();
 		node.setId( id );
+		SurveyController.getSurvey().getController().updateMainWindow();
 		return id;
 	}
 	
 	public void setNode(int id, Node node) {
 		nodeList.add(node);
 		node.setId( id );
+		SurveyController.getSurvey().getController().updateMainWindow();
 	}
 	
 	public boolean nodeExists(int id) {

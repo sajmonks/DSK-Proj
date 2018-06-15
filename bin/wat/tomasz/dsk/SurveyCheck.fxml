@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="239.0" prefWidth="302.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wat.tomasz.dsk.SurveyCheckController">
+<AnchorPane prefHeight="239.0" prefWidth="302.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wat.tomasz.dsk.SurveyCheckController">
    <children>
       <VBox alignment="TOP_CENTER" layoutX="-1.0" prefHeight="325.0" prefWidth="433.0">
          <children>
@@ -37,7 +37,7 @@
                         <Label text="Tytuł" GridPane.columnIndex="2" />
                         <Label text="Zagłosowano" GridPane.columnIndex="3" />
                         <Label text="Indeks" />
-                        <Label text="Autor" GridPane.columnIndex="1" />
+                        <Label prefHeight="17.0" prefWidth="36.0" text="Autor" GridPane.columnIndex="1" />
                      </children>
                   </GridPane>
                </content>

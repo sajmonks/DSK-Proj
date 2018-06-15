@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="497.0" prefWidth="358.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wat.tomasz.dsk.SurveyController">
+<AnchorPane prefHeight="497.0" prefWidth="358.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wat.tomasz.dsk.SurveyController">
    <children>
       <VBox alignment="CENTER" layoutY="7.0" prefHeight="497.0" prefWidth="384.0" spacing="5.0">
          <children>
@@ -34,7 +34,7 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="ALWAYS" />
                     </rowConstraints>
                      <children>
-                        <Label alignment="CENTER" text="Adres serwera: " />
+                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="89.0" text="Adres serwera: " />
                         <TextField fx:id="fieldAddress" text="192.168.1.12" GridPane.columnIndex="1">
                            <GridPane.margin>
                               <Insets />
@@ -76,10 +76,12 @@
                     </rowConstraints>
                      <children>
                         <Label text="Łączna liczba ankiet: " />
-                        <Label text="Ankiety bez odpowiedzi: " GridPane.rowIndex="1" />
-                        <Label text="0" GridPane.columnIndex="1" />
-                        <Label text="0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="Łączna liczba odpowiedzi:" GridPane.rowIndex="1" />
+                        <Label fx:id="labelAllQuestions" text="0" GridPane.columnIndex="1" />
+                        <Label fx:id="labelAllAnswers" text="0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label GridPane.rowIndex="2" />
+                        <Label text="Łączna liczba węzłów:" GridPane.rowIndex="2" />
+                        <Label fx:id="labelAllNodes" text="0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                      </children>
                   </GridPane>
                   <Button mnemonicParsing="false" onAction="#onSurveyCreate" text="Utwórz ankiete" />

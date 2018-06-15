@@ -3,9 +3,12 @@ package wat.tomasz.dsk;
 import java.io.IOException;
 import java.net.InetAddress;
 
+import Nodes.Node;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -25,6 +28,15 @@ public class SurveyController {
 	private TextField fieldListenPort;
 	
 	@FXML
+	private Label labelAllAnswers;
+	
+	@FXML
+	private Label labelAllQuestions;
+	
+	@FXML
+	private Label labelAllNodes;
+	
+	@FXML
 	private VBox connectionParameters;
 	
 	@FXML
@@ -32,6 +44,7 @@ public class SurveyController {
 	
 	@FXML
 	private void initialize() {	
+		updateMainWindow();
 	}
 	
 	@FXML
@@ -48,6 +61,10 @@ public class SurveyController {
 		}
 		
 		FileManager.writeParameters(0, listenPort);
+		getSurvey().getNodesManager().setNode(0, new Node(Utils.getAddress("127.0.0.1"), 
+				getSurvey().getConfigManager().getListenPort(), getSurvey().getConfigManager().getPublicKey()) );
+		
+		updateMainWindow();
 		getSurvey().getSocketManager().startNode(listenPort);
 		
 		//TODO ZMIANA STANU	
@@ -100,6 +117,11 @@ public class SurveyController {
 			}
 			else {
 				getSurvey().getConfigManager().setSelfId(id);
+				
+				getSurvey().getNodesManager().setNode(id, new Node(Utils.getAddress("127.0.0.1"), 
+						getSurvey().getConfigManager().getListenPort(), getSurvey().getConfigManager().getPublicKey()) );
+				
+				updateMainWindow();
 				//FileManager.writeParameters(id,  listenPort);
 				getSurvey().getController().setSurveyView();
 				getSurvey().getSocketManager().startNode(listenPort);
@@ -137,6 +159,19 @@ public class SurveyController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void updateMainWindow() {
+		
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				labelAllAnswers.setText("" + survey.getAnswersManager().getAnwerersSize());
+				labelAllQuestions.setText("" + survey.getSurveysManager().getSurveysSize());
+				labelAllNodes.setText("" + survey.getNodesManager().getNodesSize());
+				
+			}
+		});
 	}
 	
 	public void setConnectionView() {

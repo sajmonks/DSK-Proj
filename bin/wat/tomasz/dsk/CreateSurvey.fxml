@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="335.0" prefWidth="413.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wat.tomasz.dsk.CreateSurveyController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="335.0" prefWidth="413.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wat.tomasz.dsk.CreateSurveyController">
    <children>
       <VBox alignment="TOP_CENTER" prefHeight="335.0" prefWidth="413.0" spacing="10.0">
          <children>
@@ -35,8 +35,8 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label text="Treść ankiety:" />
-                        <TextField fx:id="title" prefHeight="25.0" prefWidth="284.0" GridPane.columnIndex="1">
+                        <Label prefHeight="17.0" prefWidth="73.0" text="Treść ankiety:" />
+                        <TextField fx:id="title" prefHeight="25.0" prefWidth="311.0" GridPane.columnIndex="1">
                            <GridPane.margin>
                               <Insets right="5.0" />
                            </GridPane.margin>
