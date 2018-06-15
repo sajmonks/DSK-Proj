@@ -200,7 +200,7 @@ public class NodeSocket extends Socket implements Runnable {
 				if(target != survey.getConfigManager().getSelfId())
 					return;
 				
-				if(survey.getAnswersManager().isValidAuthor(author, question))
+				if(!survey.getAnswersManager().isValidAuthor(author, question))
 					return;
 				
 				String signText =  "" + author + "" + question + "" + answer;
