@@ -39,7 +39,7 @@ public class NodeSocket extends Socket implements Runnable {
 			if(split[0].equals("NODE_JOIN_REQUEST")) {
 				String myKey = Utils.getPublicKeyString(survey.getConfigManager().getPublicKey());
 				
-				PublicKey senderKey = Utils.getPublicKeyFromString(split[1]);				
+				PublicKey senderKey = Utils.getPublicKeyFromString(split[1]);
 				if(survey.getNodesManager().nodeExists(senderKey))
 					return;
 				
@@ -63,9 +63,13 @@ public class NodeSocket extends Socket implements Runnable {
 				if(target != survey.getConfigManager().getSelfId())
 					return;
 				
+				PublicKey key = Utils.getPublicKeyFromString(pubkey);
+				
+				if(survey.getNodesManager().nodeExists(key))
+					return;
+				
 				if(!survey.getNodesManager().nodeExists(idnew)) {
-					survey.getNodesManager().setNode(idnew, new Node(Utils.getAddress(address), newport, 
-							Utils.getPublicKeyFromString(pubkey) ), true );
+					survey.getNodesManager().setNode(idnew, new Node(Utils.getAddress(address), newport, key), true );
 					
 					System.out.println("Do³¹czy³ nowy wêze³ id=" + id);
 				}

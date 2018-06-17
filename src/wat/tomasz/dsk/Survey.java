@@ -79,8 +79,8 @@ public class Survey extends Application {
 			getController().setListenPort(getConfigManager().getListenPort());
 			getController().setSurveyView();
 			getNodesManager().clear();
-			getNodesManager().setNode(0, new Node(Utils.getAddress("127.0.0.1"), //TODO
-			getConfigManager().getListenPort(), getConfigManager().getPublicKey()), true );
+			//getNodesManager().setNode(0, new Node(Utils.getAddress("127.0.0.1"), //TODO
+			//getConfigManager().getListenPort(), getConfigManager().getPublicKey()), true );
 			getController().updateMainWindow();
 			
 			getSocketManager().startNode(getConfigManager().getListenPort());

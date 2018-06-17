@@ -57,7 +57,7 @@
                   </GridPane>
                </children>
             </VBox>
-            <VBox fx:id="surveyParameters" alignment="TOP_CENTER" prefHeight="237.0" prefWidth="328.0">
+            <VBox fx:id="surveyParameters" alignment="TOP_CENTER" prefHeight="237.0" prefWidth="328.0" spacing="10.0">
                <children>
                   <Label text="Parametry ankiet">
                      <font>
@@ -86,6 +86,7 @@
                   </GridPane>
                   <Button mnemonicParsing="false" onAction="#onSurveyCreate" text="Utwórz ankiete" />
                   <Button mnemonicParsing="false" onAction="#onCheckSurveys" text="Przeglądaj ankiety" />
+                  <Button mnemonicParsing="false" text="Odejdź z sieci" textFill="#971d1d" />
                </children>
             </VBox>
          </children>
