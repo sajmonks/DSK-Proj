@@ -16,6 +16,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import wat.tomasz.dsk.ConfigManager.MissingFiles;
+import wat.tomasz.dsk.Files.FileManager;
 import wat.tomasz.dsk.Sockets.SocketManager;
 import wat.tomasz.dsk.Utils.Utils;
 
@@ -65,17 +66,21 @@ public class Survey extends Application {
 		for(MissingFiles miss : missing) {
 			if(miss == MissingFiles.Keys) {
 				showDialogInfo( "Generowanie kluczy", "Usuniêcie z sieci oraz generowanie kluczy" );
+				refreshDirectory();
+				inNetwork = false;
 			}
 			
-			if(miss == MissingFiles.Local) {
+			if(miss == MissingFiles.Local || miss == MissingFiles.Nodes) {
 				inNetwork = false;
 			}
 		}
 		if(inNetwork) {
+			configManager.loadParameters();
 			getController().setListenPort(getConfigManager().getListenPort());
 			getController().setSurveyView();
+			getNodesManager().clear();
 			getNodesManager().setNode(0, new Node(Utils.getAddress("127.0.0.1"), //TODO
-			getConfigManager().getListenPort(), getConfigManager().getPublicKey()) );
+			getConfigManager().getListenPort(), getConfigManager().getPublicKey()), true );
 			getController().updateMainWindow();
 			
 			getSocketManager().startNode(getConfigManager().getListenPort());
@@ -99,6 +104,20 @@ public class Survey extends Application {
 		alert.setHeaderText(message);
 		alert.setContentText(message);
 		alert.showAndWait();
+	}
+	
+	public void refreshDirectory() {
+		FileManager.removeIfExists("private.key");
+		FileManager.removeIfExists("public.key");
+		FileManager.removeIfExists("local.txt");
+		FileManager.removeIfExists("nodes.txt");
+		FileManager.removeIfExists("surveys.txt");
+		FileManager.removeIfExists("answers.txt");
+		
+		configManager.generateKeys();
+		FileManager.createFile("nodes.txt");
+		FileManager.createFile("surveys.txt");
+		FileManager.createFile("answers.txt");
 	}
 	
 	public SurveyController getController() {

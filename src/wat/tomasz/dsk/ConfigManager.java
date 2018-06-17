@@ -1,9 +1,13 @@
 package wat.tomasz.dsk;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -18,12 +22,15 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.List;
 
+import Answers.Answer;
+import Nodes.Node;
+import Surveys.SurveyHolder;
 import wat.tomasz.dsk.Files.FileManager;
 import wat.tomasz.dsk.Utils.Utils;
 
 public class ConfigManager {
 	
-	enum MissingFiles { None, Keys, Surveys, Answers, Local }
+	enum MissingFiles { None, Keys, Surveys, Answers, Local, Nodes }
 	
 	private PublicKey publicKey;
 	private PrivateKey privateKey;
@@ -35,7 +42,7 @@ public class ConfigManager {
 		
 	}
 	
-	private void generateKeys() {
+	public void generateKeys() {
 		KeyPairGenerator keyGen = null;
 		SecureRandom random;
 		try {
@@ -148,7 +155,6 @@ public class ConfigManager {
 		List<MissingFiles> missing = new ArrayList<MissingFiles>();
 		if( !(new File("private.key").exists()) || !(new File("public.key").exists()) ) {
 			System.out.println("Brak pary kluczy. Generowanie nowych, usuniêcie z sieci.");
-			generateKeys();
 			missing.add(MissingFiles.Keys);
 		}
 		else {
@@ -158,9 +164,6 @@ public class ConfigManager {
 		if( !(new File("local.txt").exists()) ) {
 			System.out.println("Brak pliku local.txt");
 			missing.add(MissingFiles.Local);
-		} 
-		else {
-			loadParameters();
 		}
 		
 		if( !(new File("surveys.txt").exists()) ) {
@@ -183,7 +186,114 @@ public class ConfigManager {
 			}
 			missing.add(MissingFiles.Answers);
 		}
+		
+		if( !(new File("nodes.txt").exists()) ) {
+			System.out.println("Tworzenie pliku do przechowywani u¿ytkowników.");
+			try {
+				new File("nodes.txt").createNewFile();
+			} catch (IOException e) {
+				System.out.println("Nie uda³o zapisaæ siê pliku docelowego nodes.txt");
+			}
+			missing.add(MissingFiles.Nodes);
+		}
 		return missing;
+	}
+	
+	public void loadNodes(Survey survey) {
+		try (BufferedReader br = new BufferedReader(new FileReader("nodes.txt"))) {
+			String line = null;
+			while ((line = br.readLine()) != null) {
+				String [] split = line.split(" ");
+				
+				if(split.length != 4)
+					continue;
+				
+				int id = Utils.getInt(split[0]);
+				InetAddress address = Utils.getAddress(split[1]);
+				int port = Utils.getInt(split[2]);
+				PublicKey key = Utils.getPublicKeyFromString(split[3]);
+				
+				if(!survey.getNodesManager().nodeExists(id))
+					survey.getNodesManager().setNode(id, new Node(address, port, key), false);
+			}	
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void loadAnswers(Survey survey) {
+		try (BufferedReader br = new BufferedReader(new FileReader("answers.txt"))) {
+			String line = null;
+			while ((line = br.readLine()) != null) {
+				String [] split = line.split(" ");
+				
+				
+				if(split.length != 4)
+					continue;
+				
+				int author = Utils.getInt(split[0]);
+				int question = Utils.getInt(split[1]);
+				int answer = Utils.getInt(split[2]);
+				
+				if(survey.getAnswersManager().isValidAuthor(author, question))
+					survey.getAnswersManager().addAnswer(new Answer(author, question, answer, split[3]), false);
+			}	
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void loadSurveys(Survey survey) {
+		try (BufferedReader br = new BufferedReader(new FileReader("surveys.txt"))) {
+			String line = null;
+			while ((line = br.readLine()) != null) {
+				String [] split = line.split(" ");
+				
+				if(split.length < 5)
+					continue;
+				
+				int id = Utils.getInt(split[0]);
+				int author = Utils.getInt(split[1]);;
+				int type = Utils.getInt(split[2]);;
+				String signature = split[3];
+				
+				ArrayList<String> answers = new ArrayList<String>();
+				String title = null;
+				String [] ansSplit = line.split("/");
+				boolean start = false;
+				for(int i = 1; i < ansSplit.length - 1; i++) {
+						if(ansSplit[i].equals("START_PACK")) {
+							start = true;
+							title = ansSplit[i+1];
+							i += 2;
+						}
+						if(start) {
+							if(ansSplit[i].equals("END_PACK"))
+								break;
+							else
+								answers.add(ansSplit[i]);		
+						}
+				}
+				
+				if(!survey.getSurveysManager().surveyExists(id))
+					survey.getSurveysManager().setSurvey(id, new SurveyHolder(author, type, title, answers, signature) , false);
+				
+			}	
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public PublicKey getPublicKey() {

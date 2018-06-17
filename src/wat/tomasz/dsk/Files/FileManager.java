@@ -1,5 +1,8 @@
 package wat.tomasz.dsk.Files;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -30,7 +33,35 @@ public class FileManager {
 	}
 	
 	public static void writeParameters(int id, int listenPort) {
-		writeText("local.txt", "" + id + " " + listenPort, StandardOpenOption.CREATE_NEW);
+		if(!fileExists("local.txt")) {
+			createFile("local.txt");
+			writeText("local.txt", "" + id + " " + listenPort, StandardOpenOption.CREATE_NEW);
+		}
+
+	}
+	
+	public static void removeIfExists(String filePath) {
+		File file = new File(filePath);
+		if(file.exists()) {
+			file.delete();
+		}
+	}
+	
+	public static boolean fileExists(String path) {
+		if(new File(path).exists())
+			return true;
+		
+		return false;
+	}
+	
+	public static void createFile(String path) {
+		if(!fileExists(path)) {
+			try {
+				new File(path).createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public static List<String> readText(String file) {
@@ -43,8 +74,16 @@ public class FileManager {
 	}
 	
 	public static void writeText(String file, String message, StandardOpenOption option) {
+		if(!fileExists(file)) {
+			System.out.println("Nie mo¿na znalezc pliku: " + file);
+			return;
+		}
+		
 		try {
-			Files.write(Paths.get(file), message.getBytes(), option);
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
+			writer.write(message);
+			writer.close();
+			//Files.write(Paths.get(file), message.getBytes(), option);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -1,8 +1,10 @@
 package Answers;
 
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 
 import wat.tomasz.dsk.SurveyController;
+import wat.tomasz.dsk.Files.FileManager;
 
 public class AnswersManager {
 	ArrayList<Answer> answers = new ArrayList<Answer>();
@@ -11,9 +13,12 @@ public class AnswersManager {
 		
 	}
 	
-	public void addAnswer(Answer answer) {
+	public void addAnswer(Answer answer, boolean save) {
 		answers.add(answer);
 		SurveyController.getSurvey().getController().updateMainWindow();
+		
+		if(save)
+			FileManager.writeText("answers.txt", answer.toPacket() + String.format("%n"), StandardOpenOption.APPEND);
 	}
 	
 	public boolean isValidAuthor(int author, int question) {

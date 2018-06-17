@@ -43,7 +43,7 @@ public class NodeSocket extends Socket implements Runnable {
 				if(survey.getNodesManager().nodeExists(senderKey))
 					return;
 				
-				int recid = survey.getNodesManager().addNode(new Node(receiver, port, senderKey ) );		
+				int recid = survey.getNodesManager().addNode(new Node(receiver, port, senderKey ), true );		
 				this.sendData(new CustomPacket("NODE_JOIN_ACCEPT " + recid + " " + myKey), receiver, port);
 				this.broadcastNode(survey.getNodesManager().getNode(recid));
 			}
@@ -65,7 +65,7 @@ public class NodeSocket extends Socket implements Runnable {
 				
 				if(!survey.getNodesManager().nodeExists(idnew)) {
 					survey.getNodesManager().setNode(idnew, new Node(Utils.getAddress(address), newport, 
-							Utils.getPublicKeyFromString(pubkey) ) );
+							Utils.getPublicKeyFromString(pubkey) ), true );
 					
 					System.out.println("Do³¹czy³ nowy wêze³ id=" + id);
 				}
@@ -203,7 +203,7 @@ public class NodeSocket extends Socket implements Runnable {
 				System.out.println("Odebrano jako: " + signText);
 				if(Utils.verifySignature(signText, signature, survey.getNodesManager().getNode(author).getKey())) {
 					System.out.println("Pomyœlnie zweryfikowana odpowiedz");
-					survey.getAnswersManager().addAnswer( new Answer(author, question, answer, signature) );
+					survey.getAnswersManager().addAnswer( new Answer(author, question, answer, signature), true);
 				}
 			}
 		}
@@ -258,7 +258,7 @@ public class NodeSocket extends Socket implements Runnable {
 				for(String a : answers) packet += a;
 					
 				if(Utils.verifySignature(packet, signature, survey.getNodesManager().getNode(id).getKey())) {
-					survey.getSurveysManager().setSurvey(survid, new SurveyHolder(author, type, title, answers, signature) );
+					survey.getSurveysManager().setSurvey(survid, new SurveyHolder(author, type, title, answers, signature), true);
 				}			
 			}
 		}
@@ -285,6 +285,9 @@ public class NodeSocket extends Socket implements Runnable {
 
 	@Override
 	public void onListenStart() {
+		survey.getConfigManager().loadNodes(survey);
+		survey.getConfigManager().loadSurveys(survey);
+		survey.getConfigManager().loadAnswers(survey);
 		updateSurveys();
 		updateUsers();
 		updateAnswers();

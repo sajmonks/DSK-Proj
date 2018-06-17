@@ -84,7 +84,7 @@ public class CreateSurveyController {
 					(annonymous.isSelected() ? 1 : 0), header, options, Utils.getSignString(sign, survey.getConfigManager().getPrivateKey()));
 			
 			
-			survey.getSurveysManager().addSurvey(holder);
+			survey.getSurveysManager().addSurvey(holder, true);
 			survey.getSocketManager().getNodeSocket().broadcastSurvey(holder);
 			
 			Stage stage = (Stage) title.getScene().getWindow();

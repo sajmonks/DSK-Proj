@@ -39,8 +39,10 @@ public class SocketManager {
 	}
 	
 	public void closeThread() {
-		if(socket.isSocketActive()) {
-			socket.closeSocket();
+		if(socket != null) {
+			if(socket.isSocketActive()) {
+				socket.closeSocket();
+			}
 		}
 	}
 	
@@ -61,7 +63,7 @@ public class SocketManager {
 						int id = Utils.getInt(split[1]);
 						PublicKey keyfile = Utils.getPublicKeyFromString(split[2]);
 						if( id > 0 ) {
-							getSurvey().getNodesManager().setNode(0, new Node(address, port, keyfile) );
+							getSurvey().getNodesManager().setNode(0, new Node(address, port, keyfile), true);
 							return id;
 						}	
 						System.out.println("Odebrano " + pocket);

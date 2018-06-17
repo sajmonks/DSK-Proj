@@ -119,7 +119,7 @@ public class SurveyVoteController {
 		String siganture = Utils.getSignString(signText, survey.getConfigManager().getPrivateKey());
 		
 		Answer answer = new Answer(myid, question, activeCheck, siganture);
-		survey.getAnswersManager().addAnswer(answer);
+		survey.getAnswersManager().addAnswer(answer, true);
 		survey.getSocketManager().getNodeSocket().broadcastAnswer(answer);
 		voteButton.setDisable(true);
 		Stage stage = (Stage) voteButton.getScene().getWindow();

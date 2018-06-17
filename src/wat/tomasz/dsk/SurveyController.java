@@ -61,13 +61,14 @@ public class SurveyController {
 		}
 		
 		FileManager.writeParameters(0, listenPort);
+		getSurvey().getConfigManager().loadParameters();
+		
+		getSurvey().getNodesManager().clear();
 		getSurvey().getNodesManager().setNode(0, new Node(Utils.getAddress("127.0.0.1"), 
-				getSurvey().getConfigManager().getListenPort(), getSurvey().getConfigManager().getPublicKey()) );
+				getSurvey().getConfigManager().getListenPort(), getSurvey().getConfigManager().getPublicKey()), true );
 		
 		updateMainWindow();
 		getSurvey().getSocketManager().startNode(listenPort);
-		
-		//TODO ZMIANA STANU	
 	}
 	
 	@FXML
@@ -119,7 +120,7 @@ public class SurveyController {
 				getSurvey().getConfigManager().setSelfId(id);
 				
 				getSurvey().getNodesManager().setNode(id, new Node(Utils.getAddress("127.0.0.1"), 
-						getSurvey().getConfigManager().getListenPort(), getSurvey().getConfigManager().getPublicKey()) );
+						getSurvey().getConfigManager().getListenPort(), getSurvey().getConfigManager().getPublicKey()), true);
 				
 				updateMainWindow();
 				//FileManager.writeParameters(id,  listenPort);
