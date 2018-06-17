@@ -60,6 +60,11 @@ public class CreateSurveyController {
 				return;
 			}
 			
+			if(fields.size() == 1) {
+				survey.showDialogError("Musisz podaæ przynajmniej dwie opcje", "Musisz podaæ przynajmniej dwie opcje");
+				return;
+			}
+			
 			if(fields.size() == 0) {
 				survey.showDialogError("Brak opcji", "Brak opcji");
 				return;
@@ -67,7 +72,7 @@ public class CreateSurveyController {
 				
 			for(TextField tf : fields) {
 				String opt = tf.getText();
-				if(opt.length() <= 2 && opt.length() != 0) {
+				if(opt.length() < 1 && opt.length() != 0) {
 					survey.showDialogError("B³¹d wpisywania", "Za krótki tekst");
 					return;
 				}
