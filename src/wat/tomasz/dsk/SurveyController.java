@@ -123,7 +123,7 @@ public class SurveyController {
 						getSurvey().getConfigManager().getListenPort(), getSurvey().getConfigManager().getPublicKey()), true);
 				
 				updateMainWindow();
-				//FileManager.writeParameters(id,  listenPort);
+				FileManager.writeParameters(id,  listenPort);
 				getSurvey().getController().setSurveyView();
 				getSurvey().getSocketManager().startNode(listenPort);
 			}

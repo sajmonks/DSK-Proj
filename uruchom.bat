@@ -1,0 +1,1 @@
+java -cp projekt.jar wat.tomasz.dsk.Survey
