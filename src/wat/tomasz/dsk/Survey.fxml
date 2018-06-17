@@ -86,7 +86,7 @@
                   </GridPane>
                   <Button mnemonicParsing="false" onAction="#onSurveyCreate" text="Utwórz ankiete" />
                   <Button mnemonicParsing="false" onAction="#onCheckSurveys" text="Przeglądaj ankiety" />
-                  <Button mnemonicParsing="false" text="Odejdź z sieci" textFill="#971d1d" />
+                  <Button mnemonicParsing="false" onAction="#onExitNetwork" text="Odejdź z sieci" textFill="#971d1d" />
                </children>
             </VBox>
          </children>

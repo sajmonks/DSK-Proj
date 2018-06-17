@@ -162,6 +162,24 @@ public class SurveyController {
 		}
 	}
 	
+	@FXML
+	public void onExitNetwork() {
+		if(survey.showDialogQuestion("Zaakceptowanie spowoduje usuniêcie wszystkich danych i wyjœcie z programu", 
+				"Zaakceptowanie spowoduje usuniêcie wszystkich danych i wyjœcie z programu") != 1)
+		return;
+		
+		survey.getSocketManager().closeThread();
+		FileManager.removeIfExists("private.key");
+		FileManager.removeIfExists("public.key");
+		FileManager.removeIfExists("local.txt");
+		FileManager.removeIfExists("nodes.txt");
+		FileManager.removeIfExists("surveys.txt");
+		FileManager.removeIfExists("answers.txt");
+		
+		((Stage)surveyParameters.getScene().getWindow()).close();
+		
+	}
+	
 	public void updateMainWindow() {
 		
 		Platform.runLater(new Runnable() {

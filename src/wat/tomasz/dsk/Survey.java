@@ -1,6 +1,7 @@
 package wat.tomasz.dsk;
 
 import java.util.List;
+import java.util.Optional;
 
 import Answers.AnswersManager;
 import Nodes.Node;
@@ -13,6 +14,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import wat.tomasz.dsk.ConfigManager.MissingFiles;
@@ -104,6 +106,21 @@ public class Survey extends Application {
 		alert.setHeaderText(message);
 		alert.setContentText(message);
 		alert.showAndWait();
+	}
+	
+	public int showDialogQuestion(String title, String message) {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle(title);
+		alert.setHeaderText(message);
+		alert.setContentText(message);
+		Optional<ButtonType> result = alert.showAndWait();
+		if(result.get() == ButtonType.OK) {
+			return 1;
+		}
+		else {
+			return 2;
+		}
+		
 	}
 	
 	public void refreshDirectory() {
